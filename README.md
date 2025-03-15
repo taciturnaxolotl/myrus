@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="https://raw.githubusercontent.com/taciturnaxolotl/carriage/main/.github/images/carriage.webp" width="200" alt="Logo"/><br/>
+    <img src="https://raw.githubusercontent.com/taciturnaxolotl/myrus/main/.github/images/logo.png" alt="scrapyard box with rainbow coming out and envoloping a camera"/><br/>
     <span>Myrus</span>
 </h1>
 
@@ -10,6 +10,8 @@
 <p align="center">
 	<img src="https://raw.githubusercontent.com/taciturnaxolotl/carriage/main/.github/images/line-break-thin.svg" />
 </p>
+
+this is my team's project for `scrapyard columbus` we are making a gymbal that is controlled by a phone app that tracks faces; comunication is done over [`iroh`](https://www.iroh.computer/) and the gymbal is controlled by the hackclub [`blot`](https://blot.hackclub.com) control board jerry rigged to an orpheus pico.
 
 ## pins
 

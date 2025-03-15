@@ -26,7 +26,7 @@
 </p>
 
 <p align="center">
-	<i><code>&copy 2025-present <a href="https://github.com/taciturnaxolotl">Kieran Klukas, Payton Curry, and Elizabeth Klukas</a></code></i>
+	<i><code>&copy 2025-present <a href="https://github.com/taciturnaxolotl">Kieran Klukas</a>, <a href="https://github.com/paytontech">Payton Curry</a>, and Elizabeth Klukas</code></i>
 </p>
 
 <p align="center">

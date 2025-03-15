@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-	<img src="https://raw.githubusercontent.com/taciturnaxolotl/myrus/master/.github/images/line-break-thin.svg" />
+	<img src="https://raw.githubusercontent.com/taciturnaxolotl/carriage/main/.github/images/line-break-thin.svg" />
 </p>
 
 ## pins
@@ -20,6 +20,8 @@
 5. `D7 (motor2DirPin)` - Direction control for Motor 2
 6. `D1 (enablePin)` - Enable/disable control for both motors
 7. `PIN_LED` - LED indicator (pin number not specified in the code snippet)
+
+![blot schematic](https://raw.githubusercontent.com/taciturnaxolotl/myrus/master/.github/images/blot-schematic.svg)
 
 <p align="center">
 	<img src="https://raw.githubusercontent.com/taciturnaxolotl/carriage/main/.github/images/line-break.svg" />

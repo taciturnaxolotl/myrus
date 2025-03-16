@@ -1,0 +1,21 @@
+{
+	"name": "myrus-client",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "bunx --bun vite",
+		"build": "bunx --bun vite build",
+		"preview": "bunx --bun vite preview"
+	},
+	"devDependencies": {
+		"typescript": "~5.7.2",
+		"vite": "^6.1.0",
+		"@types/bun": "^1.2.4",
+		"vite-plugin-pwa": "^0.21.1"
+	},
+	"dependencies": {
+		"@fontsource/inter": "^5.2.5",
+		"@types/w3c-web-serial": "^1.0.8"
+	}
+}

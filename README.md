@@ -15,6 +15,8 @@ this is my team's project for `scrapyard columbus` we are making a gymbal that i
 
 ## pins
 
+<img src="https://raw.githubusercontent.com/taciturnaxolotl/myrus/main/.github/images/acon-scrapyard-live-footage.png" width=360 align="right" />
+
 | Pico Pin | Blot Pin | Description |
 |----------|----------|-------------|
 | `GP11` | `D10` | Step signal for Motor 1 |

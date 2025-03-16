@@ -16,12 +16,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalViewConfiguration
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.RoundedPolygon
 import com.kashif.cameraK.builder.CameraControllerBuilder
@@ -54,6 +56,12 @@ data class Size(val width: Float, val height: Float)
 data class Rect(val top: Float, val left: Float, val bottom: Float, val right: Float)
 data class FaceData(val boundingBox: Rect)
 
+fun Rect.origin(): Size {
+    val midpointX = (this.left + this.right) / 2
+    val midpointY = (this.top + this.bottom) / 2
+    return Size(width = midpointX, height = midpointY)
+}
+
 expect suspend fun sayText(text: String)
 
 val genAI = GenerativeModel(
@@ -63,6 +71,9 @@ val genAI = GenerativeModel(
 
 expect fun epochMillis(): Long
 
+enum class MovingDirection {
+    RIGHT, LEFT
+}
 
 @Composable
 @Preview
@@ -86,7 +97,9 @@ fun App() {
             var currentThingy by remember { mutableStateOf<Rect?>(Rect(0f,0f,0f,0f)) }
             var delayMillis by remember { mutableStateOf(1000) }
             var analyzing by remember { mutableStateOf(true) }
+            var moving by remember { mutableStateOf(false) }
             val tts = rememberTextToSpeechOrNull(TextToSpeechEngine.Google)
+            val movingDirection = remember { mutableStateOf<MovingDirection?>(null) }
             LaunchedEffect(Unit) {
                 //not proud of this.
                 suspend fun roast(image: ByteArray) {
@@ -123,9 +136,27 @@ fun App() {
 
                                         currentThingy = bounds.copy(top = newY, left = newX)
                                         analyzing = false
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            roast(it.byteArray)
+                                        val leftCenter = bounds.right - bounds.left
+                                        println("BOUNDS: ${bounds.origin().width} SIZE: ${size.width}")
+                                        val midpointX = bounds.origin().width
+                                        if (midpointX < ((size.width / 2) - (size.width / 12))) {
+                                            //move left
+                                            println("move left")
+                                            movingDirection.value = MovingDirection.LEFT
+                                            analyzing = true
+                                        } else if (midpointX > ((size.width / 2) + (size.width / 12))) {
+                                            //move right
+                                            println("move right")
+                                            analyzing = true
+                                            movingDirection.value = MovingDirection.RIGHT
+                                        } else {
+                                            movingDirection.value = null
+                                            //centered
+                                            CoroutineScope(Dispatchers.IO).launch {
+                                                roast(it.byteArray)
+                                            }
                                         }
+
                                     })
 
                                 }
@@ -144,6 +175,9 @@ fun App() {
                 }
                 val leftPx = with(LocalDensity.current) {
                     currentThingy!!.left.toDp()
+                }
+                val camSizePx = with(LocalDensity.current) {
+                    camSize?.width?.toDp() ?: 0.dp
                 }
                 println("offset (dp) ${topPx} ${leftPx}")
 
@@ -164,6 +198,19 @@ fun App() {
                     }
                 })
                 Text("Face", modifier = Modifier.offset(x = leftPx, y = topPx))
+//                when (movingDirection) {
+//                    null -> {}
+//                    MovingDirection.RIGHT {
+//                        Text(">", fontWeight = FontWeight.Black, color = Color.White)
+//                    }
+//                }
+                if (movingDirection.value != null) {
+                    if (movingDirection.value == MovingDirection.RIGHT) {
+                        Text(">", fontWeight = FontWeight.Black, color = Color.White, modifier = Modifier.padding(top = 128.dp, start = camSizePx - 64.dp).scale(20f))
+                    } else {
+                        Text("<", fontWeight = FontWeight.Black, color = Color.White, modifier = Modifier.padding(top = 128.dp, start = 32.dp).scale(20f))
+                    }
+                }
             }
             Slider(modifier = Modifier.padding(top = 64.dp), value = delayMillis.toFloat(), onValueChange = {
                 delayMillis = it.toInt()

@@ -27,6 +27,7 @@ import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import com.google.mlkit.vision.face.FaceDetectorOptions.LandmarkMode
+import com.google.mlkit.vision.face.FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE
 import com.kashif.cameraK.builder.CameraControllerBuilder
 import com.kashif.cameraK.controller.CameraController
 import com.kashif.cameraK.enums.Directory
@@ -52,6 +53,8 @@ actual fun analyzeImage(img: ByteArray, callback: (Rect, Size) -> Unit) {
 //        val img = InputImage.fromByteArray(img, options.outWidth, options.outHeight, rotationDegrees, InputImage.IMAGE_FORMAT_NV21)
         val bitmap = BitmapFactory.decodeByteArray(img, 0, img.size)
         val img = InputImage.fromBitmap(bitmap, 0)
+        val options = FaceDetectorOptions.Builder()
+        options.setPerformanceMode(PERFORMANCE_MODE_ACCURATE)
         val detector = FaceDetection.getClient()
         if (AppInfo.canDetectFace) {
             AppInfo.canDetectFace = false

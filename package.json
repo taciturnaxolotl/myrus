@@ -17,6 +17,7 @@
 	"dependencies": {
 		"@fontsource/inter": "^5.2.5",
 		"@types/w3c-web-serial": "^1.0.8",
-		"face-api.js": "^0.22.2"
+		"face-api.js": "^0.22.2",
+		"serialport": "^13.0.0"
 	}
 }

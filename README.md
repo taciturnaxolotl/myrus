@@ -15,13 +15,16 @@ this is my team's project for `scrapyard columbus` we are making a gymbal that i
 
 ## pins
 
-1. `D6 (PIN_SERVO)` - Servo motor control
-2. `D10 (motor1StepPin)` - Step signal for Motor 1
-3. `D9 (motor1DirPin)` - Direction control for Motor 1
-4. `D8 (motor2StepPin)` - Step signal for Motor 2
-5. `D7 (motor2DirPin)` - Direction control for Motor 2
-6. `D1 (enablePin)` - Enable/disable control for both motors
-7. `PIN_LED` - LED indicator (pin number not specified in the code snippet)
+| Pico Pin | Blot Pin | Description |
+|----------|----------|-------------|
+| `GP11` | `D10` | Step signal for Motor 1 |
+| `GP10` | `D9` | Direction control for Motor 1 |
+| `GP9` | `D2` | Enable/disable control for both motors |
+| `GP8` | `D8` | Step signal for Motor 2 |
+| `GP7` | `D7` | Direction control for Motor 2 |
+| `GP9` | `D1` | Enable/disable control for both motors |
+| `GND` | `GND` | Ground |
+| `3V3` | `3V3` | Power |
 
 ![blot schematic](https://raw.githubusercontent.com/taciturnaxolotl/myrus/master/.github/images/blot-schematic.svg)
 

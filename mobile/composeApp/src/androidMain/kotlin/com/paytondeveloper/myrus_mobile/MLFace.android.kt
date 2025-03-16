@@ -35,14 +35,14 @@ import org.slf4j.MDC.put
 import java.io.FileOutputStream
 import java.io.IOException
 
-actual fun CameraController.getResolution(): Size? {
-    val field = this::class.java.getDeclaredField("imageCapture")
-    field.isAccessible = true
-    val imgCapture = field.get(this) as ImageCapture?
-    val res = imgCapture?.resolutionInfo?.resolution
-    return if (res != null) Size(width = res.width.toFloat(), height = res.height.toFloat()) else null
-
-}
+//actual fun CameraController.getResolution(): Size? {
+//    val field = this::class.java.getDeclaredField("imageCapture")
+//    field.isAccessible = true
+//    val imgCapture = field.get(this) as ImageCapture?
+//    val res = imgCapture?.resolutionInfo?.resolution
+//    return if (res != null) Size(width = res.width.toFloat(), height = res.height.toFloat()) else null
+//
+//}
 
 actual fun analyzeImage(img: ByteArray, callback: (Rect, Size) -> Unit) {
 //    println("res2: ${saveByteArrayToMediaStore(AppInfo.app.applicationContext, img)}")
@@ -61,7 +61,6 @@ actual fun analyzeImage(img: ByteArray, callback: (Rect, Size) -> Unit) {
                 AppInfo.canDetectFace = true
                 res.result.forEach {
                     println("FACE @ ${it.boundingBox.top}")
-                    
                     callback(Rect(it.boundingBox.top.toFloat(), it.boundingBox.left.toFloat(), it.boundingBox.bottom.toFloat(), it.boundingBox.right.toFloat()), Size(width = bitmap.width.toFloat(), height = bitmap.height.toFloat()))
                 }
             }

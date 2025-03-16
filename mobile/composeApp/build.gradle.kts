@@ -46,6 +46,12 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.camerak)
             implementation(libs.androidx.graphics.shapes)
+            implementation(libs.generativeai.google)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.tts)
+
+            // Optional: Extensions for Compose
+            implementation(libs.tts.compose)
         }
     }
 }

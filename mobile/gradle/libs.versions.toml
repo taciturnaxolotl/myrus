@@ -14,14 +14,22 @@ androidx-test-junit = "1.2.1"
 camerak = "0.0.10"
 compose-multiplatform = "1.7.0"
 faceDetection = "16.1.7"
+generativeai = "0.9.0"
+generativeaiGoogle = "0.9.0-1.0.1"
 graphicsShapes = "1.0.1"
 junit = "4.13.2"
 kotlin = "2.1.0"
+kotlinxCoroutinesCore = "1.9.0"
+ktorClientCio = "2.3.2"
+openaiClient = "4.0.1"
+ttsCompose = "2.5.0"
 
 [libraries]
 androidx-graphics-shapes = { module = "androidx.graphics:graphics-shapes", version.ref = "graphicsShapes" }
 camerak = { module = "io.github.kashif-mehmood-km:camerak", version.ref = "camerak" }
 face-detection = { module = "com.google.mlkit:face-detection", version.ref = "faceDetection" }
+generativeai = { module = "com.google.ai.client.generativeai:generativeai", version.ref = "generativeai" }
+generativeai-google = { module = "dev.shreyaspatil.generativeai:generativeai-google", version.ref = "generativeaiGoogle" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -34,6 +42,11 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCio" }
+openai-client = { module = "com.aallam.openai:openai-client", version.ref = "openaiClient" }
+tts = { module = "nl.marc-apps:tts", version.ref = "ttsCompose" }
+tts-compose = { module = "nl.marc-apps:tts-compose", version.ref = "ttsCompose" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

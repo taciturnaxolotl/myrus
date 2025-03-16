@@ -36,6 +36,14 @@ this is my team's project for `scrapyard columbus` we are making a gymbal that i
 
 The web interface is a pwa that is served from cloudflare pages. It uses the web serial api to communicate with the pico. The web interface is hosted at [myrus.dunkirk.sh](https://myrus.dunkirk.sh).
 
+## cad
+
+![cad](https://raw.githubusercontent.com/taciturnaxolotl/myrus/main/.github/images/assembly.png)
+
+The cad was done in onshape around midnight of the 15th and can be found and exported from here: [cad.onshape.com/documents/8d200c472...](https://cad.onshape.com/documents/8d200c472fc5b660efdf8352/w/ff1d53ebe00121ac7a3c9bc5/e/6edac687c4356b98c8934741?renderMode=0&uiState=67d649b588856c134638cb6b)
+
+![blueprint](https://raw.githubusercontent.com/taciturnaxolotl/myrus/main/.github/images/blueprint.svg)
+
 <p align="center">
 	<img src="https://raw.githubusercontent.com/taciturnaxolotl/carriage/main/.github/images/line-break.svg" />
 </p>

@@ -25,18 +25,35 @@ this is my team's project for `scrapyard columbus` we are making a gymbal that i
 | `GND` | `GND` | Ground |
 | `3V3` | `3V3` | Power |
 
+## firmware
+
+The firmware is written in circuitpython and is in the [`firmware`](/firmware) directory.
+The firmware sends complete rotations based on serial input in two formats:
+- `[1 or 2] [number]` -> rotate to a position in complete rotations
+- `[1 or 2] zero` -> set current position as zero
+
+The control is absolute - you specify the rotation count you want to go to rather than relative movement.
+
+Important notes:
+- Using 200 steps/rotation * 16 microsteps (very precise control)
+- Motors must be enabled by setting enable pin LOW
+- Movement speed controlled by delay between steps (currently 0.0001s) 
+- Supports two motors controlled independently
+- Coordinates maintained in number of steps from zero
+- Direction controlled automatically based on target vs current position
+- Movement is blocking - the pico will not respond to serial commands while moving
+
 ## web interface
 
 The web interface is a pwa that is served from cloudflare pages. It uses the web serial api to communicate with the pico. The web interface is hosted at [myrus.dunkirk.sh](https://myrus.dunkirk.sh).
 
 ## cad
 
-The cad was done in onshape around midnight of the 15th and can be found and exported from here: [cad.onshape.com/documents/8d200c472...](https://cad.onshape.com/documents/8d200c472fc5b660efdf8352/w/ff1d53ebe00121ac7a3c9bc5/e/6edac687c4356b98c8934741?renderMode=0&uiState=67d649b588856c134638cb6b)
+The cad was done in onshape around midnight of the `15th` and can be found and exported from here: [cad.onshape.com/documents/8d200c472...](https://cad.onshape.com/documents/8d200c472fc5b660efdf8352/w/ff1d53ebe00121ac7a3c9bc5/e/6edac687c4356b98c8934741?renderMode=0&uiState=67d649b588856c134638cb6b)
 
 ## schematics / blueprints
 
 ![blueprint](https://raw.githubusercontent.com/taciturnaxolotl/myrus/main/.github/images/blueprint.svg)
-
 
 ![blot schematic](https://raw.githubusercontent.com/taciturnaxolotl/myrus/master/.github/images/blot-schematic.svg)
 

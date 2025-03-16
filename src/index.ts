@@ -1,6 +1,15 @@
 import "./global.css";
+import * as faceapi from "face-api.js";
 
 let port: SerialPort;
+let videoElement: HTMLVideoElement;
+let lastError = 0;
+let integral = 0;
+
+// PID constants
+const Kp = 0.5;
+const Ki = 0.1;
+const Kd = 0.2;
 
 // Check if Serial API is supported
 if (!("serial" in navigator)) {
@@ -13,6 +22,9 @@ const createTemplate = () => `
 				<div style="display: flex; flex-direction: row; height: 100vh;">
 								<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: 20px;">
 												<button id="connect">Connect Serial Port</button>
+												<button id="startTracking">Start Face Tracking</button>
+												<video id="webcam" width="640" height="480" autoplay muted></video>
+												<canvas id="overlay" style="position: absolute;"></canvas>
 
 												<div>
 																<label>Left Motor (1) Rotations:</label>
@@ -35,12 +47,69 @@ const createTemplate = () => `
 				</div>
 `;
 
+async function loadFaceDetectionModels() {
+	await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
+	await faceapi.nets.faceLandmark68Net.loadFromUri("/models");
+}
+
+async function startWebcam() {
+	try {
+		const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+		videoElement.srcObject = stream;
+	} catch (err) {
+		console.error("Error accessing webcam:", err);
+		alert("Failed to access webcam");
+	}
+}
+
+function calculatePID(error: number) {
+	integral += error;
+	const derivative = error - lastError;
+	lastError = error;
+
+	return Kp * error + Ki * integral + Kd * derivative;
+}
+
+async function trackFaces() {
+	const canvas = document.getElementById("overlay") as HTMLCanvasElement;
+	canvas.width = videoElement.width;
+	canvas.height = videoElement.height;
+	const displaySize = {
+		width: videoElement.width,
+		height: videoElement.height,
+	};
+
+	setInterval(async () => {
+		const detections = await faceapi.detectAllFaces(
+			videoElement,
+			new faceapi.TinyFaceDetectorOptions(),
+		);
+
+		if (detections.length > 0) {
+			const face = detections[0];
+			const centerX = face.box.x + face.box.width / 2;
+			const targetX = videoElement.width / 2;
+			const error = (centerX - targetX) / videoElement.width;
+
+			const adjustment = calculatePID(error);
+			await sendMotorCommand(1, adjustment);
+			await sendMotorCommand(2, -adjustment);
+
+			// Draw face detection
+			const context = canvas.getContext("2d");
+			if (context) {
+				context.clearRect(0, 0, canvas.width, canvas.height);
+				faceapi.draw.drawDetections(canvas, detections);
+			}
+		}
+	}, 100);
+}
+
 async function connectSerial() {
 	try {
 		port = await navigator.serial.requestPort();
 		await port.open({ baudRate: 115200 });
 
-		// Verify port is open before continuing
 		if (port.writable == null) {
 			throw new Error("Failed to open serial port - port is not writable");
 		}
@@ -48,7 +117,6 @@ async function connectSerial() {
 		console.log("Connected to serial port");
 		appendToLog("Connected to serial port");
 
-		// Start reading from the serial port
 		while (port.readable) {
 			const reader = port.readable.getReader();
 			try {
@@ -80,7 +148,7 @@ function appendToLog(message: string) {
 	}
 }
 
-async function sendMotorCommand(motorNum: number) {
+async function sendMotorCommand(motorNum: number, rotation: number) {
 	if (!port) {
 		alert("Please connect serial port first");
 		return;
@@ -91,16 +159,13 @@ async function sendMotorCommand(motorNum: number) {
 		return;
 	}
 
-	const rotations = (
-		document.getElementById(`motor${motorNum}`) as HTMLInputElement
-	).value;
 	const writer = port.writable.getWriter();
 	const encoder = new TextEncoder();
-	const data = `${motorNum} ${rotations}\r`;
+	const data = `${motorNum} ${rotation}\r`;
 
 	try {
 		await writer.write(encoder.encode(data));
-		appendToLog(`Sent to motor ${motorNum}: ${rotations} rotations`);
+		appendToLog(`Sent to motor ${motorNum}: ${rotation} rotations`);
 	} catch (err) {
 		console.error("Write error:", err);
 		appendToLog(`Error sending to motor ${motorNum}: ${err}`);
@@ -114,7 +179,8 @@ function defaultPageRender() {
 	if (!app) throw new Error("App element not found");
 	app.innerHTML = createTemplate();
 
-	// Add slider value display updates
+	videoElement = document.getElementById("webcam") as HTMLVideoElement;
+
 	document.getElementById("motor1")?.addEventListener("input", (e) => {
 		const value = (e.target as HTMLInputElement).value;
 		const display = document.getElementById("motor1Value");
@@ -129,11 +195,20 @@ function defaultPageRender() {
 
 	document.getElementById("connect")?.addEventListener("click", connectSerial);
 	document
-		.getElementById("send1")
-		?.addEventListener("click", () => sendMotorCommand(1));
-	document
-		.getElementById("send2")
-		?.addEventListener("click", () => sendMotorCommand(2));
+		.getElementById("startTracking")
+		?.addEventListener("click", async () => {
+			await loadFaceDetectionModels();
+			await startWebcam();
+			trackFaces();
+		});
+	document.getElementById("send1")?.addEventListener("click", () => {
+		const value = (document.getElementById("motor1") as HTMLInputElement).value;
+		sendMotorCommand(1, parseFloat(value));
+	});
+	document.getElementById("send2")?.addEventListener("click", () => {
+		const value = (document.getElementById("motor2") as HTMLInputElement).value;
+		sendMotorCommand(2, parseFloat(value));
+	});
 }
 
 function handleRoute() {

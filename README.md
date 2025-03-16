@@ -8,7 +8,7 @@
 	<img src="https://raw.githubusercontent.com/taciturnaxolotl/carriage/main/.github/images/line-break-thin.svg" />
 </p>
 
-this is my team's project for `scrapyard columbus` we are making a gymbal that is controlled by a phone app that tracks faces; comunication is done over ~[`iroh`](https://www.iroh.computer/)~ `webserial` and the gymbal is controlled by the hackclub [`blot`](https://blot.hackclub.com) control board jerry rigged to an orpheus pico.
+this is my team's project for `scrapyard columbus` we are making a gymbal that is controlled by a phone app that tracks faces; comunication is done over ~[`iroh`](https://www.iroh.computer/)~ `webserial` and the gymbal is controlled by the hackclub [`blot`](https://blot.hackclub.com) control board jerry rigged to an orpheus pico. you can see a demo of the app at https://www.youtube.com/watch?v=buTqpQQnUd0
 
 ## pins
 

@@ -11,11 +11,11 @@
 	<img src="https://raw.githubusercontent.com/taciturnaxolotl/carriage/main/.github/images/line-break-thin.svg" />
 </p>
 
-this is my team's project for `scrapyard columbus` we are making a gymbal that is controlled by a phone app that tracks faces; comunication is done over [`iroh`](https://www.iroh.computer/) and the gymbal is controlled by the hackclub [`blot`](https://blot.hackclub.com) control board jerry rigged to an orpheus pico.
+this is my team's project for `scrapyard columbus` we are making a gymbal that is controlled by a phone app that tracks faces; comunication is done over ~[`iroh`](https://www.iroh.computer/)~ `webserial` and the gymbal is controlled by the hackclub [`blot`](https://blot.hackclub.com) control board jerry rigged to an orpheus pico.
 
 ## pins
 
-<img src="https://raw.githubusercontent.com/taciturnaxolotl/myrus/main/.github/images/acon-scrapyard-live-footage.png" width=360 align="right" />
+<img src="https://raw.githubusercontent.com/taciturnaxolotl/myrus/main/.github/images/acon-scrapyard-live-footage.png" width=320 align="right" />
 
 | Pico Pin | Blot Pin | Description |
 |----------|----------|-------------|
@@ -29,6 +29,12 @@ this is my team's project for `scrapyard columbus` we are making a gymbal that i
 | `3V3` | `3V3` | Power |
 
 ![blot schematic](https://raw.githubusercontent.com/taciturnaxolotl/myrus/master/.github/images/blot-schematic.svg)
+
+## web interface
+
+![web interface](https://raw.githubusercontent.com/taciturnaxolotl/myrus/main/.github/images/web-interface.png)
+
+The web interface is a pwa that is served from cloudflare pages. It uses the web serial api to communicate with the pico. The web interface is hosted at [myrus.dunkirk.sh](https://myrus.dunkirk.sh).
 
 <p align="center">
 	<img src="https://raw.githubusercontent.com/taciturnaxolotl/carriage/main/.github/images/line-break.svg" />

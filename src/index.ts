@@ -5,6 +5,9 @@ let port: SerialPort;
 let videoElement: HTMLVideoElement;
 let lastError = 0;
 let integral = 0;
+let isDragging = false;
+let joystickX = 0;
+let joystickY = 0;
 
 // PID constants
 const Kp = 0.5;
@@ -26,18 +29,13 @@ const createTemplate = () => `
 												<video id="webcam" width="640" height="480" autoplay muted></video>
 												<canvas id="overlay" style="position: absolute;"></canvas>
 
-												<div>
-																<label>Left Motor (1) Rotations:</label>
-																<input type="range" id="motor1" min="-10" max="10" step="0.1" value="0">
-																<span id="motor1Value">0</span>
-																<button id="send1">Send</button>
+												<div id="joystick" style="width: 200px; height: 200px; border: 2px solid black; border-radius: 50%; position: relative; margin: 20px;">
+																<div id="joystickHandle" style="width: 20px; height: 20px; background: red; border-radius: 50%; position: absolute; top: 90px; left: 90px; cursor: pointer;"></div>
 												</div>
-
 												<div>
-																<label>Right Motor (2) Rotations:</label>
-																<input type="range" id="motor2" min="-10" max="10" step="0.1" value="0">
-																<span id="motor2Value">0</span>
-																<button id="send2">Send</button>
+																<span>Motor Values - X: </span><span id="motor1Value">0</span>
+																<span>, Y: </span><span id="motor2Value">0</span>
+																<button id="sendJoystick">Send</button>
 												</div>
 								</div>
 								<div style="width: 300px; padding: 20px; border-left: 1px solid #ccc; overflow-y: auto;">
@@ -174,6 +172,37 @@ async function sendMotorCommand(motorNum: number, rotation: number) {
 	}
 }
 
+function updateJoystickPosition(x: number, y: number) {
+	const joystick = document.getElementById("joystick");
+	const handle = document.getElementById("joystickHandle");
+	if (!joystick || !handle) return;
+
+	const bounds = joystick.getBoundingClientRect();
+	const radius = bounds.width / 2;
+
+	// Calculate relative position from center
+	const relX = x - bounds.left - radius;
+	const relY = y - bounds.top - radius;
+
+	// Calculate distance from center
+	const distance = Math.sqrt(relX * relX + relY * relY);
+
+	// Normalize to radius if outside circle
+	const normalizedX = distance > radius ? (relX / distance) * radius : relX;
+	const normalizedY = distance > radius ? (relY / distance) * radius : relY;
+
+	// Update handle position
+	handle.style.left = normalizedX + radius - 10 + "px";
+	handle.style.top = normalizedY + radius - 10 + "px";
+
+	// Update values (-0.5 to 0.5 range)
+	joystickX = normalizedX / (radius * 2);
+	joystickY = normalizedY / (radius * 2);
+
+	document.getElementById("motor1Value")!.textContent = joystickX.toFixed(2);
+	document.getElementById("motor2Value")!.textContent = joystickY.toFixed(2);
+}
+
 function defaultPageRender() {
 	const app = document.querySelector<HTMLDivElement>("#app");
 	if (!app) throw new Error("App element not found");
@@ -181,17 +210,26 @@ function defaultPageRender() {
 
 	videoElement = document.getElementById("webcam") as HTMLVideoElement;
 
-	document.getElementById("motor1")?.addEventListener("input", (e) => {
-		const value = (e.target as HTMLInputElement).value;
-		const display = document.getElementById("motor1Value");
-		if (display) display.textContent = value;
-	});
+	const joystick = document.getElementById("joystick");
+	const handle = document.getElementById("joystickHandle");
 
-	document.getElementById("motor2")?.addEventListener("input", (e) => {
-		const value = (e.target as HTMLInputElement).value;
-		const display = document.getElementById("motor2Value");
-		if (display) display.textContent = value;
-	});
+	if (joystick && handle) {
+		handle.addEventListener("mousedown", () => {
+			isDragging = true;
+		});
+
+		document.addEventListener("mousemove", (e) => {
+			if (isDragging) {
+				updateJoystickPosition(e.clientX, e.clientY);
+			}
+		});
+
+		document.addEventListener("mouseup", () => {
+			if (isDragging) {
+				isDragging = false;
+			}
+		});
+	}
 
 	document.getElementById("connect")?.addEventListener("click", connectSerial);
 	document
@@ -201,13 +239,16 @@ function defaultPageRender() {
 			await startWebcam();
 			trackFaces();
 		});
-	document.getElementById("send1")?.addEventListener("click", () => {
-		const value = (document.getElementById("motor1") as HTMLInputElement).value;
-		sendMotorCommand(1, parseFloat(value));
+	document.getElementById("sendJoystick")?.addEventListener("click", () => {
+		sendMotorCommand(1, joystickX);
+		sendMotorCommand(2, joystickY);
 	});
-	document.getElementById("send2")?.addEventListener("click", () => {
-		const value = (document.getElementById("motor2") as HTMLInputElement).value;
-		sendMotorCommand(2, parseFloat(value));
+
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "Enter") {
+			sendMotorCommand(1, joystickX);
+			sendMotorCommand(2, joystickY);
+		}
 	});
 }
 

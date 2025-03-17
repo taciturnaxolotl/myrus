@@ -8,14 +8,14 @@ const serialPort = new SerialPort({ path: "/dev/ttyACM0", baudRate: 115200 });
 
 app.post("/motor1", (req, res) => {
 	const speed = req.body.speed;
-	const command = `1 ${speed}\n`;
+	const command = `1 ${speed}\r`;
 	serialPort.write(command);
 	res.send("OK");
 });
 
 app.post("/motor2", (req, res) => {
 	const speed = req.body.speed;
-	const command = `2 ${speed}\n`;
+	const command = `2 ${speed}\r`;
 	serialPort.write(command);
 	res.send("OK");
 });
